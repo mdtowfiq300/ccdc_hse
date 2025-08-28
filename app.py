@@ -60,12 +60,12 @@ with tabs[0]:
     # Center table
     st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
     # Center table properly
-table_html = filtered_day.to_html(index=False)
-st.markdown(f"""
-<div style="width: 900px; margin: 0 auto;">
-    {table_html}
-</div>
-""", unsafe_allow_html=True)
+    table_html = filtered_day.to_html(index=False)
+    st.markdown(f"""
+    <div style="width: 900px; margin: 0 auto;">
+        {table_html}
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
