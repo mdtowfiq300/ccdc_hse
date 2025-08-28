@@ -43,6 +43,11 @@ summary_html = f"""
 st.markdown(summary_html, unsafe_allow_html=True)
 
 # ----------------------
+# Extra vertical space before tabs
+# ----------------------
+st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True)
+
+# ----------------------
 # Tabs Section
 # ----------------------
 tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency"])
