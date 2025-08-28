@@ -59,7 +59,7 @@ with tabs[0]:
     
     # Center table
     st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-    st.dataframe(filtered_day, use_container_width=False, width=900)
+    st.dataframe(filtered_day, use_container_width=False, width=1500)
     st.markdown("</div>", unsafe_allow_html=True)
 
 # ----------------------
