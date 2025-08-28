@@ -13,8 +13,8 @@ NIGHT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM
 
 @st.cache_data
 def load_data():
-    day_df = pd.read_csv(DAY_SHEET_URL)
-    night_df = pd.read_csv(NIGHT_SHEET_URL)
+    day_df = pd.read_csv(DAY_SHEET_URL, dtype={"Phone": str})
+    night_df = pd.read_csv(NIGHT_SHEET_URL,, dtype={"Phone": str})
     return day_df, night_df
 
 day_df, night_df = load_data()
