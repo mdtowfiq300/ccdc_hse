@@ -47,6 +47,20 @@ st.markdown(summary_html, unsafe_allow_html=True)
 # ----------------------
 tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency"])
 
+# Center and style the tabs
+st.markdown("""
+    <style>
+    div[data-baseweb="tab-list"] {
+        display: flex;
+        justify-content: center; /* center horizontally */
+    }
+    div[data-baseweb="tab"] {
+        font-size: 20px !important; /* bigger font */
+        font-weight: 600 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # ----------------------
 # Day Shift Tab
 # ----------------------
