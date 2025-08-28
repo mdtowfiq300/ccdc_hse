@@ -23,27 +23,13 @@ day_df, night_df = load_data()
 # Summary Section (Centered)
 # ----------------------
 st.markdown("<h2 style='text-align: center; color: #ff6600;'>📊 Summary</h2>", unsafe_allow_html=True)
-
-summary_html = f"""
-<div style='display: flex; justify-content: center; gap: 50px; text-align: center;'>
-    <div style='background-color: #e0f7fa; padding: 20px; border-radius: 10px; width: 180px;'>
-        <h3>🌞 Day Shift</h3>
-        <h2>{len(day_df)}</h2>
-    </div>
-    <div style='background-color: #ffe0b2; padding: 20px; border-radius: 10px; width: 180px;'>
-        <h3>🌙 Night Shift</h3>
-        <h2>{len(night_df)}</h2>
-    </div>
-    <div style='background-color: #d1c4e9; padding: 20px; border-radius: 10px; width: 180px;'>
-        <h3>📋 Total Onboard</h3>
-        <h2>{len(day_df) + len(night_df)}</h2>
-    </div>
-</div>
-"""
-st.markdown(summary_html, unsafe_allow_html=True)
+col1, col2, col3 = st.columns(3)
+col1.metric("🌞 Day Shift", len(day_df))
+col2.metric("🌙 Night Shift", len(night_df))
+col3.metric("📋 Total Onboard", len(day_df) + len(night_df))
 
 # ----------------------
-# Tabs Section (Centered)
+# Tabs Section
 # ----------------------
 tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency"])
 
@@ -52,38 +38,25 @@ tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency"])
 # ----------------------
 with tabs[0]:
     st.markdown("<h3 style='text-align: center;'>Day Shift Employees</h3>", unsafe_allow_html=True)
-    search_day = st.text_input("🔍 Search by Name", key="search_day", label_visibility="collapsed")
+    search_day = st.text_input("Search by Name", key="search_day")
     filtered_day = day_df.copy()
     if search_day:
         filtered_day = day_df[day_df["Name"].str.contains(search_day, case=False, na=False)]
-
-    # Center table
-    st.markdown(
-        f"""
-        <div style='display: flex; justify-content: center;'>
-            <div style='width: 900px;'>{filtered_day.to_html(index=False)}</div>
-        </div>
-        """, unsafe_allow_html=True
-    )
+    # Center table by placing it inside a container
+    with st.container():
+        st.dataframe(filtered_day, use_container_width=True)
 
 # ----------------------
 # Night Shift Tab
 # ----------------------
 with tabs[1]:
     st.markdown("<h3 style='text-align: center;'>Night Shift Employees</h3>", unsafe_allow_html=True)
-    search_night = st.text_input("🔍 Search by Name", key="search_night", label_visibility="collapsed")
+    search_night = st.text_input("Search by Name", key="search_night")
     filtered_night = night_df.copy()
     if search_night:
         filtered_night = night_df[night_df["Name"].str.contains(search_night, case=False, na=False)]
-
-    # Center table
-    st.markdown(
-        f"""
-        <div style='display: flex; justify-content: center;'>
-            <div style='width: 900px;'>{filtered_night.to_html(index=False)}</div>
-        </div>
-        """, unsafe_allow_html=True
-    )
+    with st.container():
+        st.dataframe(filtered_night, use_container_width=True)
 
 # ----------------------
 # Emergency Tab
@@ -107,5 +80,6 @@ with tabs[2]:
     if st.button("Submit Muster Attendance"):
         muster_df = pd.DataFrame(list(attendance.items()), columns=["Name", "Present"])
         st.success("✅ Muster attendance recorded successfully!")
-        st.dataframe(muster_df, use_container_width=True)
+        with st.container():
+            st.dataframe(muster_df, use_container_width=True)
         muster_df.to_csv("muster_attendance.csv", index=False)
