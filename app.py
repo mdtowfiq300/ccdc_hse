@@ -26,15 +26,15 @@ st.markdown("<h2 style='text-align: center; color: #ff6600;'>📊 Summary</h2>",
 
 summary_html = f"""
 <div style='display: flex; justify-content: center; gap: 50px; text-align: center;'>
-    <div style='background-color: #e0f7fa; padding: 20px; border-radius: 10px; width: 180px;'>
+    <div style='background-color: #e0f7fa; padding: 20px; border-radius: 10px; width: 250px;'>
         <h3>🌞 Day Shift</h3>
         <h2>{len(day_df)}</h2>
     </div>
-    <div style='background-color: #ffe0b2; padding: 20px; border-radius: 10px; width: 180px;'>
+    <div style='background-color: #ffe0b2; padding: 20px; border-radius: 10px; width: 250px;'>
         <h3>🌙 Night Shift</h3>
         <h2>{len(night_df)}</h2>
     </div>
-    <div style='background-color: #d1c4e9; padding: 20px; border-radius: 10px; width: 180px;'>
+    <div style='background-color: #d1c4e9; padding: 20px; border-radius: 10px; width: 250px;'>
         <h3>📋 Total Onboard</h3>
         <h2>{len(day_df) + len(night_df)}</h2>
     </div>
