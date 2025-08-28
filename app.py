@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 
+# Page config
 st.set_page_config(page_title="POB Dashboard", layout="wide")
-st.title("📋 Personnel On Board (POB)")
+st.markdown("<h1 style='text-align: center; color: #1f77b4;'>👷 Personnel On Board (POB)</h1>", unsafe_allow_html=True)
 
 # ----------------------
 # Google Sheet CSV export links
@@ -19,13 +20,25 @@ def load_data():
 day_df, night_df = load_data()
 
 # ----------------------
+# Summary Section
+# ----------------------
+st.markdown("<h2 style='text-align: center; color: #ff6600;'>📊 Summary</h2>", unsafe_allow_html=True)
+col1, col2, col3 = st.columns(3)
+col1.metric("🌞 Day Shift", len(day_df))
+col2.metric("🌙 Night Shift", len(night_df))
+col3.metric("📋 Total Onboard", len(day_df) + len(night_df))
+
+# ----------------------
 # Tabs
 # ----------------------
-tab1, tab2 = st.tabs(["🌞 Day Shift", "🌙 Night Shift"])
+tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency"])
 
-with tab1:
-    st.subheader("Day Shift Employees")
-    search_day = st.text_input("Search Day Shift by Name / Designation / Nationality", key="search_day")
+# ----------------------
+# Day Shift Tab
+# ----------------------
+with tabs[0]:
+    st.markdown("<h3 style='text-align: center;'>Day Shift Employees</h3>", unsafe_allow_html=True)
+    search_day = st.text_input("Search by Name / Designation / Nationality", key="search_day")
     if search_day:
         filtered_day = day_df[
             day_df.apply(lambda row: search_day.lower() in row.astype(str).str.lower().to_string(), axis=1)
@@ -34,9 +47,12 @@ with tab1:
     else:
         st.dataframe(day_df, use_container_width=True)
 
-with tab2:
-    st.subheader("Night Shift Employees")
-    search_night = st.text_input("Search Night Shift by Name / Designation / Nationality", key="search_night")
+# ----------------------
+# Night Shift Tab
+# ----------------------
+with tabs[1]:
+    st.markdown("<h3 style='text-align: center;'>Night Shift Employees</h3>", unsafe_allow_html=True)
+    search_night = st.text_input("Search by Name / Designation / Nationality", key="search_night")
     if search_night:
         filtered_night = night_df[
             night_df.apply(lambda row: search_night.lower() in row.astype(str).str.lower().to_string(), axis=1)
@@ -46,9 +62,24 @@ with tab2:
         st.dataframe(night_df, use_container_width=True)
 
 # ----------------------
-# Summary
+# Emergency Tab
 # ----------------------
-st.write("### Summary")
-st.write(f"👷 Day Shift: {len(day_df)} personnel")
-st.write(f"🌙 Night Shift: {len(night_df)} personnel")
-st.write(f"📊 Total Onboard: {len(day_df) + len(night_df)}")
+with tabs[2]:
+    st.markdown("<h3 style='text-align: center; color: red;'>🚨 Emergency Muster Attendance</h3>", unsafe_allow_html=True)
+    st.write("Mark employees present at the muster point:")
+
+    # Combine both Day and Night employees for Emergency
+    emergency_df = pd.concat([day_df, night_df], ignore_index=True)
+    
+    attendance = {}
+    for i, row in emergency_df.iterrows():
+        name = row["Name"]
+        attendance[name] = st.checkbox(f"{name}", key=f"emergency_{i}")
+
+    if st.button("Submit Muster Attendance"):
+        muster_df = pd.DataFrame(list(attendance.items()), columns=["Name", "Present"])
+        st.success("✅ Muster attendance recorded successfully!")
+        st.dataframe(muster_df, use_container_width=True)
+
+        # Optional: Save locally
+        muster_df.to_csv("muster_attendance.csv", index=False)
