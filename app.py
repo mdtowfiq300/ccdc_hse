@@ -20,7 +20,7 @@ def load_data():
 day_df, night_df = load_data()
 
 # ----------------------
-# Summary Section (Centered)
+# Summary Section (Formatted like second code)
 # ----------------------
 st.markdown("<h2 style='text-align: center; color: #ff6600;'>📊 Summary</h2>", unsafe_allow_html=True)
 
@@ -43,7 +43,7 @@ summary_html = f"""
 st.markdown(summary_html, unsafe_allow_html=True)
 
 # ----------------------
-# Tabs Section (Centered)
+# Tabs Section
 # ----------------------
 tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency"])
 
@@ -52,12 +52,12 @@ tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency"])
 # ----------------------
 with tabs[0]:
     st.markdown("<h3 style='text-align: center;'>Day Shift Employees</h3>", unsafe_allow_html=True)
-    search_day = st.text_input("🔍 Search by Name / Designation / Nationality", key="search_day", label_visibility="collapsed")
+    search_day = st.text_input("Search by Name", key="search_day")
     filtered_day = day_df.copy()
     if search_day:
-        filtered_day = day_df[
-            day_df.apply(lambda row: search_day.lower() in row.astype(str).str.lower().to_string(), axis=1)
-        ]
+        filtered_day = day_df[day_df["Name"].str.contains(search_day, case=False, na=False)]
+    
+    # Center table
     st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
     st.dataframe(filtered_day, use_container_width=False, width=900)
     st.markdown("</div>", unsafe_allow_html=True)
@@ -67,12 +67,12 @@ with tabs[0]:
 # ----------------------
 with tabs[1]:
     st.markdown("<h3 style='text-align: center;'>Night Shift Employees</h3>", unsafe_allow_html=True)
-    search_night = st.text_input("🔍 Search by Name / Designation / Nationality", key="search_night", label_visibility="collapsed")
+    search_night = st.text_input("Search by Name", key="search_night")
     filtered_night = night_df.copy()
     if search_night:
-        filtered_night = night_df[
-            night_df.apply(lambda row: search_night.lower() in row.astype(str).str.lower().to_string(), axis=1)
-        ]
+        filtered_night = night_df[night_df["Name"].str.contains(search_night, case=False, na=False)]
+    
+    # Center table
     st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
     st.dataframe(filtered_night, use_container_width=False, width=900)
     st.markdown("</div>", unsafe_allow_html=True)
