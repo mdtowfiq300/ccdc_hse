@@ -42,6 +42,7 @@ with tabs[0]:
     filtered_day = day_df.copy()
     if search_day:
         filtered_day = day_df[day_df["Name"].str.contains(search_day, case=False, na=False)]
+    # Center table by placing it inside a container
     with st.container():
         st.dataframe(filtered_day, use_container_width=True)
 
@@ -64,7 +65,6 @@ with tabs[2]:
     st.markdown("<h3 style='text-align: center; color: red;'>🚨 Emergency Muster Attendance</h3>", unsafe_allow_html=True)
     st.write("Mark employees present at the muster point:")
 
-    # Combine Day & Night employees
     emergency_df = pd.concat([day_df, night_df], ignore_index=True)
     
     # Display checkboxes in 2 columns
