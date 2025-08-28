@@ -42,7 +42,7 @@ with tabs[0]:
     filtered_day = day_df.copy()
     if search_day:
         filtered_day = day_df[day_df["Name"].str.contains(search_day, case=False, na=False)]
-    # Center table by placing it inside a container
+    # Table format from first code (inside container)
     with st.container():
         st.dataframe(filtered_day, use_container_width=True)
 
