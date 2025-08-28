@@ -45,18 +45,24 @@ st.markdown(summary_html, unsafe_allow_html=True)
 # ----------------------
 # Tabs Section
 # ----------------------
+
+# Add vertical space before the tabs
+st.markdown("<div style='margin-top:50px;'></div>", unsafe_allow_html=True)
+
 tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency"])
 
-# Center and style the tabs
+# Center and enlarge the tabs
 st.markdown("""
     <style>
     div[data-baseweb="tab-list"] {
         display: flex;
         justify-content: center; /* center horizontally */
+        gap: 30px; /* spacing between tabs */
     }
     div[data-baseweb="tab"] {
-        font-size: 20px !important; /* bigger font */
+        font-size: 22px !important; /* bigger font */
         font-weight: 600 !important;
+        padding: 10px 20px !important; /* bigger clickable area */
     }
     </style>
 """, unsafe_allow_html=True)
