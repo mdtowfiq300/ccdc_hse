@@ -84,18 +84,23 @@ with tabs[2]:
     st.markdown("<h3 style='text-align: center; color: red;'>🚨 Emergency Muster Attendance</h3>", unsafe_allow_html=True)
     st.write("Mark employees present at the muster point:")
 
-    emergency_df = pd.concat([day_df, night_df], ignore_index=True)
-    
-    # Display checkboxes in 2 columns
-    col1, col2 = st.columns(2)
+    # Create two columns: Left = Day, Right = Night
+    col_day, col_night = st.columns(2)
     attendance = {}
-    for i, row in emergency_df.iterrows():
-        name = row["Name"]
-        if i % 2 == 0:
-            attendance[name] = col1.checkbox(name, key=f"emergency_{i}")
-        else:
-            attendance[name] = col2.checkbox(name, key=f"emergency_{i}")
 
+    # Day Shift column
+    col_day.markdown("### 🌞 Day Shift")
+    for i, row in day_df.iterrows():
+        name = row["Name"]
+        attendance[name] = col_day.checkbox(name, key=f"day_emergency_{i}")
+
+    # Night Shift column
+    col_night.markdown("### 🌙 Night Shift")
+    for i, row in night_df.iterrows():
+        name = row["Name"]
+        attendance[name] = col_night.checkbox(name, key=f"night_emergency_{i}")
+
+    # Submit button
     if st.button("Submit Muster Attendance"):
         muster_df = pd.DataFrame(list(attendance.items()), columns=["Name", "Present"])
         st.success("✅ Muster attendance recorded successfully!")
