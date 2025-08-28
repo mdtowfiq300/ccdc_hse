@@ -10,14 +10,16 @@ st.markdown("<h1 style='text-align: center; color: #1f77b4; font-size:50px;'>�
 # ----------------------
 DAY_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid=0"
 NIGHT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid=888211122"
+VEHICLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid=561590588"
 
 @st.cache_data
 def load_data():
     day_df = pd.read_csv(DAY_SHEET_URL, dtype={"Phone": str})
     night_df = pd.read_csv(NIGHT_SHEET_URL, dtype={"Phone": str})
-    return day_df, night_df
+    vehicle_df = pd.read_csv(VEHICLE_SHEET_URL, dtype={"Phone": str})
+    return day_df, night_df, vehicle_df
 
-day_df, night_df = load_data()
+day_df, night_df, vehicle_df = load_data()
 
 # ----------------------
 # Summary Section
@@ -50,7 +52,7 @@ st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True)
 # ----------------------
 # Tabs Section
 # ----------------------
-tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency"])
+tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency", "🚗 Vehicle"])
 
 # Center and style the tabs
 st.markdown("""
@@ -85,14 +87,7 @@ with tabs[0]:
     if search_day:
         filtered_day = day_df[day_df["Name"].str.contains(search_day, case=False, na=False)]
 
-    st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
-    st.markdown(
-        "<div style='background-color: #e0f7fa; padding: 15px; border-radius: 12px; width: 100%; max-width: 100%; box-shadow: 2px 2px 12px rgba(0,0,0,0.1);'>",
-        unsafe_allow_html=True
-    )
     st.dataframe(filtered_day, use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # ----------------------
 # Night Shift Tab
@@ -113,14 +108,7 @@ with tabs[1]:
     if search_night:
         filtered_night = night_df[night_df["Name"].str.contains(search_night, case=False, na=False)]
 
-    st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
-    st.markdown(
-        "<div style='background-color: #fff3e0; padding: 15px; border-radius: 12px; width: 100%; max-width: 100%; box-shadow: 2px 2px 12px rgba(0,0,0,0.1);'>",
-        unsafe_allow_html=True
-    )
     st.dataframe(filtered_night, use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # ----------------------
 # Emergency Tab
@@ -129,27 +117,37 @@ with tabs[2]:
     st.markdown("<h2 style='text-align: center; color: red; font-size:32px;'>🚨 Emergency Muster Attendance</h2>", unsafe_allow_html=True)
     st.write("Mark employees present at the muster point:")
 
-    # Mobile-friendly: columns stack on small screens
     col_day, col_night = st.columns([1, 1], gap="small")
     attendance = {}
 
-    # Day Shift
     col_day.markdown("<div style='background-color:#e0f7fa; padding:10px; border-radius:12px; text-align:center;'><b>🌞 Day Shift</b></div>", unsafe_allow_html=True)
     for i, row in day_df.iterrows():
         name = row["Name"]
         attendance[name] = col_day.checkbox(name, key=f"day_emergency_{i}")
 
-    # Night Shift
     col_night.markdown("<div style='background-color:#fff3e0; padding:10px; border-radius:12px; text-align:center;'><b>🌙 Night Shift</b></div>", unsafe_allow_html=True)
     for i, row in night_df.iterrows():
         name = row["Name"]
         attendance[name] = col_night.checkbox(name, key=f"night_emergency_{i}")
 
-    # Submit button centered
-    st.markdown("<div style='display: flex; justify-content: center; margin-top: 15px;'>", unsafe_allow_html=True)
     if st.button("Submit Muster Attendance"):
         muster_df = pd.DataFrame(list(attendance.items()), columns=["Name", "Present"])
         st.success("✅ Muster attendance recorded successfully!")
         st.dataframe(muster_df, use_container_width=True)
         muster_df.to_csv("muster_attendance.csv", index=False)
-    st.markdown("</div>", unsafe_allow_html=True)
+
+# ----------------------
+# Vehicle Tab
+# ----------------------
+with tabs[3]:
+    st.markdown("<h2 style='text-align: center; color: #00796b; font-size:32px;'>🚗 Vehicle Information</h2>", unsafe_allow_html=True)
+
+    search_vehicle = st.text_input("", placeholder="Search by Name or Vehicle Number", key="search_vehicle")
+    filtered_vehicle = vehicle_df.copy()
+    if search_vehicle:
+        filtered_vehicle = vehicle_df[
+            vehicle_df["Name"].str.contains(search_vehicle, case=False, na=False) |
+            vehicle_df["Vehicle Number"].str.contains(search_vehicle, case=False, na=False)
+        ]
+
+    st.dataframe(filtered_vehicle, use_container_width=True)
