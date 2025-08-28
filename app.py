@@ -38,13 +38,10 @@ tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency"])
 # ----------------------
 with tabs[0]:
     st.markdown("<h3 style='text-align: center;'>Day Shift Employees</h3>", unsafe_allow_html=True)
-    search_day = st.text_input("Search by Name / Designation / Nationality", key="search_day")
+    search_day = st.text_input("Search by Name", key="search_day")
     filtered_day = day_df.copy()
     if search_day:
-        filtered_day = day_df[
-            day_df.apply(lambda row: search_day.lower() in row.astype(str).str.lower().to_string(), axis=1)
-        ]
-    # Center table by placing it inside a container
+        filtered_day = day_df[day_df["Name"].str.contains(search_day, case=False, na=False)]
     with st.container():
         st.dataframe(filtered_day, use_container_width=True)
 
@@ -53,12 +50,10 @@ with tabs[0]:
 # ----------------------
 with tabs[1]:
     st.markdown("<h3 style='text-align: center;'>Night Shift Employees</h3>", unsafe_allow_html=True)
-    search_night = st.text_input("Search by Name / Designation / Nationality", key="search_night")
+    search_night = st.text_input("Search by Name", key="search_night")
     filtered_night = night_df.copy()
     if search_night:
-        filtered_night = night_df[
-            night_df.apply(lambda row: search_night.lower() in row.astype(str).str.lower().to_string(), axis=1)
-        ]
+        filtered_night = night_df[night_df["Name"].str.contains(search_night, case=False, na=False)]
     with st.container():
         st.dataframe(filtered_night, use_container_width=True)
 
@@ -69,6 +64,7 @@ with tabs[2]:
     st.markdown("<h3 style='text-align: center; color: red;'>🚨 Emergency Muster Attendance</h3>", unsafe_allow_html=True)
     st.write("Mark employees present at the muster point:")
 
+    # Combine Day & Night employees
     emergency_df = pd.concat([day_df, night_df], ignore_index=True)
     
     # Display checkboxes in 2 columns
