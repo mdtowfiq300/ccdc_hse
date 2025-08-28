@@ -45,24 +45,18 @@ st.markdown(summary_html, unsafe_allow_html=True)
 # ----------------------
 # Tabs Section
 # ----------------------
-
-# Add vertical space before the tabs
-st.markdown("<div style='margin-top:50px;'></div>", unsafe_allow_html=True)
-
 tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency"])
 
-# Center and enlarge the tabs
+# Center and style the tabs
 st.markdown("""
     <style>
     div[data-baseweb="tab-list"] {
         display: flex;
         justify-content: center; /* center horizontally */
-        gap: 30px; /* spacing between tabs */
     }
     div[data-baseweb="tab"] {
-        font-size: 22px !important; /* bigger font */
+        font-size: 20px !important; /* bigger font */
         font-weight: 600 !important;
-        padding: 10px 20px !important; /* bigger clickable area */
     }
     </style>
 """, unsafe_allow_html=True)
@@ -72,6 +66,15 @@ st.markdown("""
 # ----------------------
 with tabs[0]:
     st.markdown("<h2 style='text-align: center; color: #0288d1; font-size:32px;'>🌞 Day Shift Employees</h2>", unsafe_allow_html=True)
+    
+    # Aggregation by Designation (horizontal)
+    day_agg = day_df['Designation'].value_counts()
+    agg_html = "<div style='display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 15px;'>"
+    for desig, count in day_agg.items():
+        agg_html += f"<div style='background-color:#b2ebf2; padding:8px 12px; border-radius:10px; font-weight:600;'>{count} {desig}</div>"
+    agg_html += "</div>"
+    st.markdown(agg_html, unsafe_allow_html=True)
+    
     search_day = st.text_input("", placeholder="Search by Name", key="search_day")
     filtered_day = day_df.copy()
     if search_day:
@@ -91,6 +94,15 @@ with tabs[0]:
 # ----------------------
 with tabs[1]:
     st.markdown("<h2 style='text-align: center; color: #f57c00; font-size:32px;'>🌙 Night Shift Employees</h2>", unsafe_allow_html=True)
+    
+    # Aggregation by Designation (horizontal)
+    night_agg = night_df['Designation'].value_counts()
+    agg_html = "<div style='display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 15px;'>"
+    for desig, count in night_agg.items():
+        agg_html += f"<div style='background-color:#ffe0b2; padding:8px 12px; border-radius:10px; font-weight:600;'>{count} {desig}</div>"
+    agg_html += "</div>"
+    st.markdown(agg_html, unsafe_allow_html=True)
+    
     search_night = st.text_input("", placeholder="Search by Name", key="search_night")
     filtered_night = night_df.copy()
     if search_night:
