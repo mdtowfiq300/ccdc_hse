@@ -28,7 +28,7 @@ summary_html = f"""
 <div style='display: flex; justify-content: center; gap: 50px; text-align: center;'>
     <div style='background-color: #e0f7fa; padding: 20px; border-radius: 10px; width: 250px;'>
         <h3>🌞 Day Shift</h3>
-        <h2>{len(day_df)}</h2>
+        <h2 style='margin: 0; font-size: 32px; line-height: 1.2;'>{len(day_df)}</h2>
     </div>
     <div style='background-color: #ffe0b2; padding: 20px; border-radius: 10px; width: 250px;'>
         <h3>🌙 Night Shift</h3>
