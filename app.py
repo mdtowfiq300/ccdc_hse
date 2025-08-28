@@ -1,46 +1,54 @@
 import streamlit as st
 import pandas as pd
 
-# Google Sheet link (your one)
-SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid={}"
+st.set_page_config(page_title="POB Dashboard", layout="wide")
+st.title("📋 Personnel On Board (POB)")
 
-# GIDs for each sheet (find in URL after gid=...)
-DAY_SHEET_ID = "0"     # Replace with actual gid for "day" sheet
-NIGHT_SHEET_ID = "1436398814"  # Replace with gid for "night" sheet
+# ----------------------
+# Google Sheet CSV export links
+# ----------------------
+DAY_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid=0"
+NIGHT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid=888211122"
 
 @st.cache_data
 def load_data():
-    day_df = pd.read_csv(SHEET_URL.format(DAY_SHEET_ID))
-    night_df = pd.read_csv(SHEET_URL.format(NIGHT_SHEET_ID))
+    day_df = pd.read_csv(DAY_SHEET_URL)
+    night_df = pd.read_csv(NIGHT_SHEET_URL)
     return day_df, night_df
 
-st.title("🛠️ POB - Personnel On Board")
-
-# Load data
 day_df, night_df = load_data()
 
-# Tabs for Day / Night shifts
-tab1, tab2 = st.tabs(["☀️ Day Shift", "🌙 Night Shift"])
+# ----------------------
+# Tabs
+# ----------------------
+tab1, tab2 = st.tabs(["🌞 Day Shift", "🌙 Night Shift"])
 
 with tab1:
-    st.subheader("Day Shift POB")
-    search = st.text_input("🔍 Search (by Name / Designation / Nationality)", key="day_search")
-    if search:
-        filtered = day_df[
-            day_df.apply(lambda row: search.lower() in row.astype(str).str.lower().to_string(), axis=1)
+    st.subheader("Day Shift Employees")
+    search_day = st.text_input("Search Day Shift by Name / Designation / Nationality", key="search_day")
+    if search_day:
+        filtered_day = day_df[
+            day_df.apply(lambda row: search_day.lower() in row.astype(str).str.lower().to_string(), axis=1)
         ]
-        st.dataframe(filtered, use_container_width=True)
+        st.dataframe(filtered_day, use_container_width=True)
     else:
         st.dataframe(day_df, use_container_width=True)
 
 with tab2:
-    st.subheader("Night Shift POB")
-    search = st.text_input("🔍 Search (by Name / Designation / Nationality)", key="night_search")
-    if search:
-        filtered = night_df[
-            night_df.apply(lambda row: search.lower() in row.astype(str).str.lower().to_string(), axis=1)
+    st.subheader("Night Shift Employees")
+    search_night = st.text_input("Search Night Shift by Name / Designation / Nationality", key="search_night")
+    if search_night:
+        filtered_night = night_df[
+            night_df.apply(lambda row: search_night.lower() in row.astype(str).str.lower().to_string(), axis=1)
         ]
-        st.dataframe(filtered, use_container_width=True)
+        st.dataframe(filtered_night, use_container_width=True)
     else:
         st.dataframe(night_df, use_container_width=True)
 
+# ----------------------
+# Summary
+# ----------------------
+st.write("### Summary")
+st.write(f"👷 Day Shift: {len(day_df)} personnel")
+st.write(f"🌙 Night Shift: {len(night_df)} personnel")
+st.write(f"📊 Total Onboard: {len(day_df) + len(night_df)}")
