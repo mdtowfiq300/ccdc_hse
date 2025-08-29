@@ -18,7 +18,11 @@ def load_data():
     day_df = pd.read_csv(DAY_SHEET_URL, dtype={"Phone": str})
     night_df = pd.read_csv(NIGHT_SHEET_URL, dtype={"Phone": str})
     vehicle_df = pd.read_csv(VEHICLE_SHEET_URL, dtype={"Phone": str})
-    vacation_df = pd.read_csv(VACATION_SHEET_URL, dtype=str, parse_dates=["Rest Date"])
+    vacation_df = pd.read_csv(VACATION_SHEET_URL, dtype=str)
+
+    # Fix Rest Date formatting
+    vacation_df["Rest Date"] = pd.to_datetime(vacation_df["Rest Date"], errors="coerce").dt.strftime("%m/%d/%Y")
+
     return day_df, night_df, vehicle_df, vacation_df
 
 day_df, night_df, vehicle_df, vacation_df = load_data()
