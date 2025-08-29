@@ -158,15 +158,20 @@ with tabs[3]:
     st.dataframe(filtered_vehicle, use_container_width=True)
 
 # ----------------------
+
 # Vacation Tab
 # ----------------------
 with tabs[4]:
     st.markdown("<h2 style='text-align: center; color: #6a1b9a; font-size:32px;'>🏖️ Vacation List</h2>", unsafe_allow_html=True)
     search_vacation = st.text_input("", placeholder="Search by Name or Nationality", key="search_vacation")
-    filtered_vacation = vacation_df.copy()
+    
+    # Sort vacation_df by Designation
+    vacation_df_sorted = vacation_df.sort_values(by="Designation", ignore_index=True)
+    
+    filtered_vacation = vacation_df_sorted.copy()
     if search_vacation:
-        filtered_vacation = vacation_df[
-            vacation_df["Name"].str.contains(search_vacation, case=False, na=False) |
-            vacation_df["Nationality"].str.contains(search_vacation, case=False, na=False)
+        filtered_vacation = vacation_df_sorted[
+            vacation_df_sorted["Name"].str.contains(search_vacation, case=False, na=False) |
+            vacation_df_sorted["Nationality"].str.contains(search_vacation, case=False, na=False)
         ]
     st.dataframe(filtered_vacation, use_container_width=True)
