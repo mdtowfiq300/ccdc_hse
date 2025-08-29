@@ -21,7 +21,14 @@ def load_data():
     vacation_df = pd.read_csv(VACATION_SHEET_URL, dtype=str)
 
     # Fix Rest Date formatting
-    vacation_df["Rest Date"] = pd.to_datetime(vacation_df["Rest Date"], errors="coerce").dt.strftime("%m/%d/%Y")
+    vacation_df["Rest Date"] = pd.to_datetime(vacation_df["Rest Date"], errors="coerce")
+
+    # Dynamically calculate Rest Days
+    today = pd.Timestamp.today().normalize()
+    vacation_df["Rest Days"] = (today - vacation_df["Rest Date"]).dt.days
+
+    # Optional: format Rest Date to M/D/Y for display
+    vacation_df["Rest Date"] = vacation_df["Rest Date"].dt.strftime("%m/%d/%Y")
 
     return day_df, night_df, vehicle_df, vacation_df
 
@@ -65,10 +72,10 @@ st.markdown("""
     <style>
     div[data-baseweb="tab-list"] {
         display: flex;
-        justify-content: center; /* center horizontally */
+        justify-content: center;
     }
     div[data-baseweb="tab"] {
-        font-size: 20px !important; /* bigger font */
+        font-size: 20px !important;
         font-weight: 600 !important;
     }
     </style>
