@@ -11,15 +11,17 @@ st.markdown("<h1 style='text-align: center; color: #1f77b4; font-size:50px;'>�
 DAY_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid=0"
 NIGHT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid=888211122"
 VEHICLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid=561590588"
+VACATION_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid=1108595442"
 
 @st.cache_data
 def load_data():
     day_df = pd.read_csv(DAY_SHEET_URL, dtype={"Phone": str})
     night_df = pd.read_csv(NIGHT_SHEET_URL, dtype={"Phone": str})
     vehicle_df = pd.read_csv(VEHICLE_SHEET_URL, dtype={"Phone": str})
-    return day_df, night_df, vehicle_df
+    vacation_df = pd.read_csv(VACATION_SHEET_URL, dtype=str, parse_dates=["Rest Date"])
+    return day_df, night_df, vehicle_df, vacation_df
 
-day_df, night_df, vehicle_df = load_data()
+day_df, night_df, vehicle_df, vacation_df = load_data()
 
 # ----------------------
 # Summary Section
@@ -52,7 +54,7 @@ st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True)
 # ----------------------
 # Tabs Section
 # ----------------------
-tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency", "🚗 Vehicle"])
+tabs = st.tabs(["🌞 Day Shift", "🌙 Night Shift", "🚨 Emergency", "🚗 Vehicle", "🏖️ Vacation"])
 
 # Center and style the tabs
 st.markdown("""
@@ -73,20 +75,17 @@ st.markdown("""
 # ----------------------
 with tabs[0]:
     st.markdown("<h2 style='text-align: center; color: #0288d1; font-size:32px;'>🌞 Day Shift Employees</h2>", unsafe_allow_html=True)
-    
-    # Aggregation by Designation (horizontal)
     day_agg = day_df['Designation'].value_counts()
     agg_html = "<div style='display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 15px;'>"
     for desig, count in day_agg.items():
         agg_html += f"<div style='background-color:#b2ebf2; padding:8px 12px; border-radius:10px; font-weight:600;'>{count} {desig}</div>"
     agg_html += "</div>"
     st.markdown(agg_html, unsafe_allow_html=True)
-    
+
     search_day = st.text_input("", placeholder="Search by Name", key="search_day")
     filtered_day = day_df.copy()
     if search_day:
         filtered_day = day_df[day_df["Name"].str.contains(search_day, case=False, na=False)]
-
     st.dataframe(filtered_day, use_container_width=True)
 
 # ----------------------
@@ -94,20 +93,17 @@ with tabs[0]:
 # ----------------------
 with tabs[1]:
     st.markdown("<h2 style='text-align: center; color: #f57c00; font-size:32px;'>🌙 Night Shift Employees</h2>", unsafe_allow_html=True)
-    
-    # Aggregation by Designation (horizontal)
     night_agg = night_df['Designation'].value_counts()
     agg_html = "<div style='display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 15px;'>"
     for desig, count in night_agg.items():
         agg_html += f"<div style='background-color:#ffe0b2; padding:8px 12px; border-radius:10px; font-weight:600;'>{count} {desig}</div>"
     agg_html += "</div>"
     st.markdown(agg_html, unsafe_allow_html=True)
-    
+
     search_night = st.text_input("", placeholder="Search by Name", key="search_night")
     filtered_night = night_df.copy()
     if search_night:
         filtered_night = night_df[night_df["Name"].str.contains(search_night, case=False, na=False)]
-
     st.dataframe(filtered_night, use_container_width=True)
 
 # ----------------------
@@ -141,7 +137,6 @@ with tabs[2]:
 # ----------------------
 with tabs[3]:
     st.markdown("<h2 style='text-align: center; color: #00796b; font-size:32px;'>🚗 Vehicle Information</h2>", unsafe_allow_html=True)
-
     search_vehicle = st.text_input("", placeholder="Search by Name or Vehicle Number", key="search_vehicle")
     filtered_vehicle = vehicle_df.copy()
     if search_vehicle:
@@ -149,5 +144,18 @@ with tabs[3]:
             vehicle_df["Name"].str.contains(search_vehicle, case=False, na=False) |
             vehicle_df["Vehicle Number"].str.contains(search_vehicle, case=False, na=False)
         ]
-
     st.dataframe(filtered_vehicle, use_container_width=True)
+
+# ----------------------
+# Vacation Tab
+# ----------------------
+with tabs[4]:
+    st.markdown("<h2 style='text-align: center; color: #6a1b9a; font-size:32px;'>🏖️ Vacation List</h2>", unsafe_allow_html=True)
+    search_vacation = st.text_input("", placeholder="Search by Name or Nationality", key="search_vacation")
+    filtered_vacation = vacation_df.copy()
+    if search_vacation:
+        filtered_vacation = vacation_df[
+            vacation_df["Name"].str.contains(search_vacation, case=False, na=False) |
+            vacation_df["Nationality"].str.contains(search_vacation, case=False, na=False)
+        ]
+    st.dataframe(filtered_vacation, use_container_width=True)
