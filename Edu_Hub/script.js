@@ -1,10 +1,17 @@
+// Enable worker for PDF.js
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+
 const pdfSelect = document.getElementById("pdf-select");
 const viewerContainer = document.getElementById("viewer-container");
+const fullscreenBtn = document.getElementById("fullscreen-btn");
 
+// Function to load PDF
 async function loadViewer() {
     const selectedValue = pdfSelect.value;
     const screenWidth = window.innerWidth;
 
+    // Clear previous content
     viewerContainer.innerHTML = "";
 
     if (screenWidth > 768) {
@@ -12,7 +19,7 @@ async function loadViewer() {
         const iframe = document.createElement("iframe");
         iframe.src = `${selectedValue}.pdf`;
         iframe.width = "100%";
-        iframe.height = "600px";
+        iframe.height = "100%";
         iframe.style.border = "none";
         viewerContainer.appendChild(iframe);
     } else {
@@ -45,6 +52,22 @@ async function loadViewer() {
         }
     }
 }
+
+// Fullscreen functionality (desktop only)
+fullscreenBtn.addEventListener("click", () => {
+    if (!document.fullscreenElement) {
+        viewerContainer.requestFullscreen().then(() => {
+            viewerContainer.classList.add("fullscreen");
+        }).catch(err => console.error(err));
+    } else {
+        document.exitFullscreen().then(() => {
+            viewerContainer.classList.remove("fullscreen");
+        }).catch(err => console.error(err));
+    }
+});
+
+// Disable right-click on viewer to make saving harder
+viewerContainer.addEventListener("contextmenu", (e) => e.preventDefault());
 
 // Initial load
 loadViewer();
