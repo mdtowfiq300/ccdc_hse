@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edu Hub - Training Materials</title>
+<link rel="stylesheet" href="style.css">
+
+<!-- PDF.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+    <a href="https://jmicylinders.github.io/" class="navbar-link">JMI OHS</a>
+</nav>
+
+<!-- Edu Hub Section -->
+<section id="edu-hub">
+    <h2>Edu Hub - Training Materials</h2>
+
+    <!-- Dropdown -->
+    <div class="pdf-container">
+        <label for="pdf-select">Select Training Material:</label>
+        <select id="pdf-select">
+            <option value="Fire Extinguisher_English">Fire Extinguisher Training (Eng)</option>
+            <option value="hira_bangla">Hira Training (Bangla)</option>
+            <option value="hira_English">Hira Training (Eng)</option>
+        </select>
+    </div>
+
+    <!-- Fullscreen Button -->
+    <button id="fullscreen-btn">⛶ Fullscreen</button>
+
+    <!-- Viewer -->
+    <div id="viewer-container"></div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
