@@ -329,23 +329,7 @@ img {
 
 /*========HOME=============*/
 
-.image-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #d3e2d7;
-  padding: 10px;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  max-width: 80%;
-  text-align: center;
-  margin: 0 auto; /* Center the container horizontally */
-}
 
-.image-container img {
-  width: 100%;
-  border-radius: 6px;
-}
 
 
 .Home__container {
