@@ -5,7 +5,7 @@ document.getElementById('loginBtn').addEventListener('click', function () {
 
     // Predefined login credentials
     
-    const ohs = { phone: 'ccdc10x', password: 'ccdc10x', redirectUrl: 'ohs.html' };
+    const ohs = { phone: 'ccdc10x', password: 'ccdc10x', redirectUrl: 'accident.html' };
 
     // Validate login
     if (phoneNumber === ohs.phone && password === ohs.password) {
