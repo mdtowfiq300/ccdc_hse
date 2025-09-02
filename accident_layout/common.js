@@ -5,10 +5,10 @@ document.getElementById('loginBtn').addEventListener('click', function () {
 
     // Predefined login credentials
     
-    const ohs = { phone: 'ccdc10x', password: 'ccdc10x', redirectUrl: 'accident.html' };
+    const accident = { phone: 'ccdc10x', password: 'ccdc10x', redirectUrl: 'accident.html' };
 
     // Validate login
-    if (phoneNumber === ohs.phone && password === ohs.password) {
+    if (phoneNumber === accident.phone && password === accident.password) {
         window.location.href = accident.redirectUrl;
     } else {
         errorMessage.textContent = 'Invalid phone number or password';
