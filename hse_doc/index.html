@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document Viewer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h2>HSE Documents</h2>
+
+    <label>Select Document Type(s):</label>
+    <select id="docType" multiple>
+      <option value="attendance">Attendance</option>
+      <option value="ptw">Work Permit (PTW)</option>
+    </select>
+
+    <label>Select Date: mm/dd/yyyy</label>
+    <input type="date" id="docDate">
+
+    <br>
+    <button id="searchBtn">Search</button>
+
+    <div id="tableDiv"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
