@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 
+# ----------------------
 # Page config
+# ----------------------
 st.set_page_config(page_title="POB Dashboard", layout="wide")
 st.markdown("<h1 style='text-align: center; color: #1f77b4; font-size:50px;'>👷 Personnel On Board (POB)</h1>", unsafe_allow_html=True)
 
@@ -13,26 +15,31 @@ NIGHT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM
 VEHICLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid=561590588"
 VACATION_SHEET_URL = "https://docs.google.com/spreadsheets/d/1u9wPUX2eeBGJ8hQYhW7UM7DIq_ck2F7kn7TPQQH8tg4/export?format=csv&gid=1108595442"
 
+# ----------------------
+# Cached loader (only reading CSVs)
+# ----------------------
 @st.cache_data
 def load_data():
     day_df = pd.read_csv(DAY_SHEET_URL, dtype={"Phone": str})
     night_df = pd.read_csv(NIGHT_SHEET_URL, dtype={"Phone": str})
     vehicle_df = pd.read_csv(VEHICLE_SHEET_URL, dtype={"Phone": str})
     vacation_df = pd.read_csv(VACATION_SHEET_URL, dtype=str)
-
-    # Fix Rest Date formatting
-    vacation_df["Rest Date"] = pd.to_datetime(vacation_df["Rest Date"], errors="coerce")
-
-    # Dynamically calculate Rest Days
-    today = pd.Timestamp.today().normalize()
-    vacation_df["Rest Days"] = (today - vacation_df["Rest Date"]).dt.days
-
-    # Optional: format Rest Date to M/D/Y for display
-    vacation_df["Rest Date"] = vacation_df["Rest Date"].dt.strftime("%m/%d/%Y")
-
     return day_df, night_df, vehicle_df, vacation_df
 
 day_df, night_df, vehicle_df, vacation_df = load_data()
+
+# ----------------------
+# Dynamic calculations (always recalculated)
+# ----------------------
+today = pd.Timestamp.today().normalize()
+
+# Vacation Rest Days
+vacation_df["Rest Date"] = pd.to_datetime(vacation_df["Rest Date"], errors="coerce")
+vacation_df["Rest Days"] = (today - vacation_df["Rest Date"]).dt.days
+vacation_df["Rest Date"] = vacation_df["Rest Date"].dt.strftime("%m/%d/%Y")
+
+# Example: If you also have "Days on Duty" in day/night sheets (not shown in your code),
+# you can recalc here dynamically using "Start Date" or similar column if available.
 
 # ----------------------
 # Summary Section
@@ -158,7 +165,6 @@ with tabs[3]:
     st.dataframe(filtered_vehicle, use_container_width=True)
 
 # ----------------------
-
 # Vacation Tab
 # ----------------------
 with tabs[4]:
