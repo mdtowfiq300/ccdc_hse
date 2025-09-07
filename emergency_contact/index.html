@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Haripur Job Location & Hospitals</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Leaflet Routing -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+  <style>
+    html, body { height: 100%; margin: 0; padding: 0; }
+    #map { height: 100%; width: 100%; }
+    .leaflet-popup-content { font-size: 15px; line-height: 1.4; }
+
+    /* Floating emergency card */
+    #emergencyCard {
+      position: absolute;
+      top: 20px;
+      left: 100px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 12px 15px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+      z-index: 1000;
+      font-family: Arial, sans-serif;
+      width: 220px;
+    }
+    #emergencyCard h3 {
+      margin: 0 0 6px 0;
+      font-size: 16px;
+      color: #d63031;
+    }
+    #emergencyCard p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+
+<!-- Floating emergency contact card -->
+<div id="emergencyCard">
+  <h3>🚨 Emergency Contact</h3>
+  <p><b>Haripur Fire Service</b><br>📞 01901023289</p>
+  <p><b>Jaintapur Model Police Station</b><br>Deputy Manager (Security)<br>📞 01901023289</p>
+  <p><b>Jaintapur Model Police Station</b><br>Beat Officer<br>📞 01320-118059</p>
+  <p><b>Jaintapur Model Police Station</b><br>Duty Officer<br>📞 01320-118052</p>
+  <p><b>RAB 9</b><br>📞 01754-887196</p>
+  <p><b>Emergency Services</b><br>📞 999</p>
+  <p><b>Fire Service Hotline</b><br>📞 102</p>
+  
+</div>
+
+<script>
+  // Job location
+  const jobLocation = [25.023511878654777, 92.06247645240666];
+
+  // Hospitals with info
+  const hospitals = [
+    { name: "Sylhet MAG Osmani Medical College Hospital", coords: [24.90054308726357, 91.85232103706016], phone: "02996631213", address: "Medical College Rd, Sylhet",website :"https://www.somch.gov.bd/" },
+    { name: "Mount Adora Hospital, Akhaliya, Sylhet", coords: [24.909751108585954, 91.84403409288302], phone: "09610848484", address: "Akhalia, Sylhet", website : "https://mountadora.com/" },
+    { name: "Ibn Sina Hospital", coords: [24.891829828379016, 91.87750588123724], phone: "09610009640", address: "Subid Bazar, Sylhet" , website : "http://www.ibnsinahospitalsylhet.com.bd/"},
+    { name: "Al Haramain Hospital", coords: [24.889241245147087, 91.87972365237621], phone: "0821729981", address: "Subhani Ghat, Sylhet", website:"https://www.haramainhospital.com/" },
+    { name: "Jalalabad Ragib-Rabeya Medical College and Hospital", coords: [24.913582887161652, 91.85243328123806], phone: "01779900016", address: "Pathantula, Sylhet",website : "http://jrrmc.edu.bd/" }
+  ];
+
+  // Include job location in bounds
+  const allPoints = [jobLocation, ...hospitals.map(h => h.coords)];
+  const bounds = L.latLngBounds(allPoints);
+
+  // Initialize map
+  const map = L.map('map', { zoomControl: true });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+  map.fitBounds(bounds);
+
+  // 🔒 Lock panning and zooming after fitting bounds
+  map.dragging.disable();
+  map.scrollWheelZoom.disable();
+  map.doubleClickZoom.disable();
+  map.boxZoom.disable();
+  map.touchZoom.disable();
+  map.keyboard.disable();
+
+  // Define custom icons
+  const jobIcon = L.icon({
+    iconUrl: 'data:image/png;base64,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', // drilling rig
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -30]
+  });
+
+  const hospitalIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/574/574692.png', // hospital
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -28]
+  });
+
+  // Job marker
+  const jobMarker = L.marker(jobLocation, { icon: jobIcon })
+    .addTo(map)
+    .bindPopup("⛏️ CCDC Haripur 10x ")
+    .openPopup();
+
+  let activeHospital = null;
+
+  // Hospital markers
+  hospitals.forEach(hospital => {
+    const marker = L.marker(hospital.coords, { icon: hospitalIcon })
+      .addTo(map)
+      .bindPopup(hospital.name);
+
+    marker.on('click', function() {
+      // If clicked again → reset
+      if (activeHospital === hospital.name) {
+        if (window.routeControl) {
+          map.removeControl(window.routeControl);
+          window.routeControl = null;
+        }
+        activeHospital = null;
+        marker.closePopup();
+        jobMarker.openPopup();
+        return;
+      }
+
+      // Remove old route if exists
+      if (window.routeControl) map.removeControl(window.routeControl);
+
+      // Add route
+      window.routeControl = L.Routing.control({
+        waypoints: [
+          L.latLng(jobLocation[0], jobLocation[1]),
+          L.latLng(hospital.coords[0], hospital.coords[1])
+        ],
+        lineOptions: { styles: [{ color: 'blue', weight: 6, opacity: 0.7 }] },
+        createMarker: () => null,
+        routeWhileDragging: false,
+        show: false
+      }).addTo(map);
+
+      marker.bindPopup(
+        `<b>${hospital.name}</b><br>
+         📍 ${hospital.address}<br>
+         🚗 Distance: calculating...<br>
+         ☎️ ${hospital.phone}<br>
+         ${hospital.website}`
+      ).openPopup();
+
+      activeHospital = hospital.name;
+
+      // Update popup with distance & time
+      window.routeControl.on('routesfound', function(e) {
+        const route = e.routes[0];
+        const distanceKm = (route.summary.totalDistance / 1000).toFixed(1);
+        const durationMin = Math.round(route.summary.totalTime / 60);
+
+        marker.setPopupContent(
+          `<b>${hospital.name}</b><br>
+           📍 ${hospital.address}<br>
+           🚗 ${distanceKm} km, ${durationMin} min<br>
+           ☎️ ${hospital.phone} <br>
+           ${hospital.website}`
+        ).openPopup();
+      });
+    });
+  });
+</script>
+</body>
+</html>
