@@ -101,7 +101,11 @@
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
   map.fitBounds(bounds);
-
+  
+// MOBILE ADJUSTMENT: zoom out a bit
+if (window.innerWidth <= 768) {  // mobile screen
+  map.setZoom(map.getZoom() - 2); // zoom out 1 level
+}
   // Lock panning and zooming after fitting bounds
   map.dragging.disable();
   map.scrollWheelZoom.disable();
@@ -192,5 +196,6 @@
 </script>
 </body>
 </html>
+
 
 
