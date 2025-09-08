@@ -36,15 +36,17 @@ today = pd.Timestamp.today().normalize()
 # --- Day Shift: calculate Days dynamically ---
 day_df["Arrive Date"] = pd.to_datetime(day_df["Arrive Date"], errors="coerce")
 day_df["Days"] = (today - day_df["Arrive Date"]).dt.days
+day_df["Arrive Date"] = day_df["Arrive Date"].dt.strftime("%d-%b-%Y")
 
 # --- Night Shift: calculate Days dynamically ---
 night_df["Arrive Date"] = pd.to_datetime(night_df["Arrive Date"], errors="coerce")
 night_df["Days"] = (today - night_df["Arrive Date"]).dt.days
+night_df["Arrive Date"] = night_df["Arrive Date"].dt.strftime("%d-%b-%Y")
 
 # --- Vacation: calculate Rest Days dynamically ---
 vacation_df["Rest Date"] = pd.to_datetime(vacation_df["Rest Date"], errors="coerce")
 vacation_df["Rest Days"] = (today - vacation_df["Rest Date"]).dt.days
-vacation_df["Rest Date"] = vacation_df["Rest Date"].dt.strftime("%m/%d/%Y")
+vacation_df["Rest Date"] = vacation_df["Rest Date"].dt.strftime("%d-%b-%Y")
 
 # ----------------------
 # Summary Section
