@@ -86,7 +86,7 @@
 <div id="map"></div>
 
 <!-- Toggle button for mobile emergency card -->
-<button id="emergencyToggleBtn">🚨 Emergency</button>
+<button id="emergencyToggleBtn">🚨 Emergency Contact </button>
 
 <!-- Floating emergency contact card -->
 <div id="emergencyCard">
@@ -126,7 +126,7 @@
 
   // MOBILE ADJUSTMENT: zoom out a bit
   if (window.innerWidth <= 768) {
-    map.setZoom(map.getZoom() - 0.3);
+    map.setZoom(map.getZoom() - 0.5);
   }
 
   // Lock panning and zooming after fitting bounds
@@ -231,3 +231,4 @@
 </script>
 </body>
 </html>
+
