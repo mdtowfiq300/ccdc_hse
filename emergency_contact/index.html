@@ -124,10 +124,7 @@
   }).addTo(map);
   map.fitBounds(bounds);
 
-  // MOBILE ADJUSTMENT: zoom out a bit
-  if (window.innerWidth <= 768) {
-    map.setZoom(map.getZoom() - .5);
-  }
+ 
 
   // Lock panning and zooming after fitting bounds
   map.dragging.disable();
@@ -231,6 +228,7 @@
 </script>
 </body>
 </html>
+
 
 
 
