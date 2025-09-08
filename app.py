@@ -33,13 +33,18 @@ day_df, night_df, vehicle_df, vacation_df = load_data()
 # ----------------------
 today = pd.Timestamp.today().normalize()
 
-# Vacation Rest Days
+# --- Day Shift: calculate Days dynamically ---
+day_df["Arrive Date"] = pd.to_datetime(day_df["Arrive Date"], errors="coerce")
+day_df["Days"] = (today - day_df["Arrive Date"]).dt.days
+
+# --- Night Shift: calculate Days dynamically ---
+night_df["Arrive Date"] = pd.to_datetime(night_df["Arrive Date"], errors="coerce")
+night_df["Days"] = (today - night_df["Arrive Date"]).dt.days
+
+# --- Vacation: calculate Rest Days dynamically ---
 vacation_df["Rest Date"] = pd.to_datetime(vacation_df["Rest Date"], errors="coerce")
 vacation_df["Rest Days"] = (today - vacation_df["Rest Date"]).dt.days
 vacation_df["Rest Date"] = vacation_df["Rest Date"].dt.strftime("%m/%d/%Y")
-
-# Example: If you also have "Days on Duty" in day/night sheets (not shown in your code),
-# you can recalc here dynamically using "Start Date" or similar column if available.
 
 # ----------------------
 # Summary Section
