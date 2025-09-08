@@ -335,7 +335,7 @@ img {
   justify-content: center;
   align-items: center;
   background-color: #d3e2d7;
-  padding: 10px;
+  padding: 90px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   max-width: 80%;
@@ -344,7 +344,8 @@ img {
 }
 
 .image-container img {
-  width: 100%;
+  width: 70%;   /* image takes half of the container */
+  height: auto; /* keep aspect ratio */
   border-radius: 6px;
 }
 
@@ -1729,4 +1730,5 @@ img {
     bottom: -4.5rem;
   }
 }
+
 
