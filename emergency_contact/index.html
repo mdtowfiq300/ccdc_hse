@@ -22,7 +22,7 @@
     #emergencyCard {
       position: absolute;
       top: 120px;
-      right: 100px;
+      right: 10px;
       background: rgba(255, 255, 255, 0.95);
       padding: 12px 15px;
       border-radius: 10px;
@@ -113,25 +113,70 @@
     { name: "Jalalabad Ragib-Rabeya Medical College and Hospital", coords: [24.913582887161652, 91.85243328123806], phone: "01779900016", address: "Pathantula, Sylhet", website: "http://jrrmc.edu.bd/" }
   ];
 
-  // Include job location in bounds
-  const allPoints = [jobLocation, ...hospitals.map(h => h.coords)];
+  // --- NEW LOCATIONS ---
+  const otherLocations = [
+    { 
+      name: "Sylhet Gas Fields Limited", 
+      coords: [24.967879747730475, 92.02573555742168], 
+      phone: "0821760205", 
+      address: "Tamabil Road", 
+      website: "http://www.sgfl.org.bd/", 
+      type: "gas" 
+    },
+    { 
+      name: "Haripur Fire Service & Civil Defence", 
+      coords: [24.93180590522598, 91.9737291936247], 
+      phone: "01304824900", 
+      address: "Tamabil Road", 
+      website: "http://www.fireservice.gov.bd/", 
+      type: "fire" 
+    },
+
+       { 
+      name: "Fire Service & Civil Defence", 
+      coords: [24.891414613092188, 91.86440884875667], 
+      phone: "01730336644", 
+      address: "Taltola , sylhet", 
+      website: "http://www.fireservice.gov.bd/", 
+      type: "fire" 
+    },
+
+        { 
+      name: "Sylhet Metropolitan Police Office", 
+      coords: [24.903328187676497, 91.87860164281719], 
+      phone: "0821716968", 
+      address: "Kumar para Road, sylhet", 
+      website: "",
+      type: "police" 
+    },
+
+         { 
+      name: "Sylhet Highway Police Circle", 
+      coords: [24.912003486720014, 91.94871670002118], 
+      phone: "01320184634", 
+      address: "Tamabil Road", 
+      website: "",
+      type: "police" 
+    },
+  ];
+
+  // Include all points in bounds
+  const allPoints = [jobLocation, ...hospitals.map(h => h.coords), ...otherLocations.map(l => l.coords)];
   const bounds = L.latLngBounds(allPoints);
 
   // Initialize map
   const map = L.map('map', { zoomControl: true });
 
-// --- Use English tile layer ---
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
-}).addTo(map);
-
-
+  // English tile layer
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+  }).addTo(map);
 
   map.fitBounds(bounds);
 
-  // --- Disable dragging/zooming only on PC ---
+  // Disable dragging/zooming only on PC
   if (window.innerWidth > 768) {
     map.dragging.disable();
     map.scrollWheelZoom.disable();
@@ -140,7 +185,6 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     map.touchZoom.disable();
     map.keyboard.disable();
   }
-  // On mobile -> keep panning/zoom enabled
 
   // Define custom icons
   const jobIcon = L.icon({
@@ -154,6 +198,27 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/574/574692.png',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
+    popupAnchor: [0, -28]
+  });
+
+  const gasIcon = L.icon({
+    iconUrl: 'https://upload.wikimedia.org/wikipedia/en/b/bc/Sylhet_Gas_Fields_Limited_logo.png',  // gas field icon
+    iconSize: [36, 36],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -28]
+  });
+
+  const fireIcon = L.icon({
+    iconUrl: 'https://img.freepik.com/premium-psd/red-fire-truck-3d-icon-illustration-3d-render_360064-5781.jpg',  // fire service icon
+    iconSize: [36, 36],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -28]
+  });
+
+   const policeIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.freepik.com/512/10275/10275817.png',  // fire service icon
+    iconSize: [25, 25],
+    iconAnchor: [18, 36],
     popupAnchor: [0, -28]
   });
 
@@ -222,6 +287,68 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     });
   });
 
+  // --- NEW MARKERS ---
+  otherLocations.forEach(loc => {
+    const icon = loc.type === "gas" ? gasIcon 
+            : loc.type === "fire" ? fireIcon 
+            : loc.type === "police" ? policeIcon 
+            : hospitalIcon;   // fallback just in case
+
+    const marker = L.marker(loc.coords, { icon })
+      .addTo(map)
+      .bindPopup(loc.name);
+
+    marker.on('click', function() {
+      if (activeHospital === loc.name) {
+        if (window.routeControl) {
+          map.removeControl(window.routeControl);
+          window.routeControl = null;
+        }
+        activeHospital = null;
+        marker.closePopup();
+        jobMarker.openPopup();
+        return;
+      }
+
+      if (window.routeControl) map.removeControl(window.routeControl);
+
+      window.routeControl = L.Routing.control({
+        waypoints: [
+          L.latLng(jobLocation[0], jobLocation[1]),
+          L.latLng(loc.coords[0], loc.coords[1])
+        ],
+        lineOptions: { styles: [{ color: 'blue', weight: 6, opacity: 0.7 }] },
+        createMarker: () => null,
+        routeWhileDragging: false,
+        show: false
+      }).addTo(map);
+
+      marker.bindPopup(
+        `<b>${loc.name}</b><br>
+         📍 ${loc.address}<br>
+         🚗 Distance: calculating...<br>
+         ☎️ ${loc.phone}<br>
+         ${loc.website}`
+      ).openPopup();
+
+      activeHospital = loc.name;
+
+      window.routeControl.on('routesfound', function(e) {
+        const route = e.routes[0];
+        const distanceKm = (route.summary.totalDistance / 1000).toFixed(1);
+        const durationMin = Math.round(route.summary.totalTime / 60);
+
+        marker.setPopupContent(
+          `<b>${loc.name}</b><br>
+           📍 ${loc.address}<br>
+           🚗 ${distanceKm} km, ${durationMin} min<br>
+           ☎️ ${loc.phone} <br>
+           ${loc.website}`
+        ).openPopup();
+      });
+    });
+  });
+
   // Toggle emergency card on mobile
   const toggleBtn = document.getElementById('emergencyToggleBtn');
   const emergencyCard = document.getElementById('emergencyCard');
@@ -234,7 +361,7 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     }
   });
 </script>
+
 </body>
 </html>
-
 
