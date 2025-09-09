@@ -349,6 +349,20 @@ img {
   border-radius: 6px;
 }
 
+
+/* 📱 Mobile adjustments */
+@media (max-width: 768px) {
+  .image-container {
+    padding: 20px;   /* smaller padding for mobile */
+    max-width: 95%;  /* use more screen width */
+  }
+
+  .image-container img {
+    width: 100%;     /* let image fill container on mobile */
+  }
+}
+
+
 .Home__container {
   background-color: rgba(255, 255, 255, 0); /* White background */
   border-radius: 10px; /* Rounded corners */
@@ -1730,5 +1744,6 @@ img {
     bottom: -4.5rem;
   }
 }
+
 
 
