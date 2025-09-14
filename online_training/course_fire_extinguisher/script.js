@@ -94,18 +94,7 @@ pdfjsLib.getDocument(url).promise
     console.error('Error loading PDF:', err);
   });
 
-// Fullscreen button
-document.getElementById("fullscreen-btn").addEventListener("click", () => {
-  const canvas = document.getElementById("pdf-canvas");
 
-  if (canvas.requestFullscreen) {
-    canvas.requestFullscreen();
-  } else if (canvas.webkitRequestFullscreen) { // Safari
-    canvas.webkitRequestFullscreen();
-  } else if (canvas.msRequestFullscreen) { // IE/Edge
-    canvas.msRequestFullscreen();
-  }
-});
 
 
 // -----------------------------
@@ -134,4 +123,5 @@ canvas.addEventListener("touchend", (e) => {
     }
   }
 });
+
 
