@@ -96,15 +96,17 @@ pdfjsLib.getDocument(url).promise
 
 // Fullscreen button
 document.getElementById("fullscreen-btn").addEventListener("click", () => {
-  const container = document.getElementById("pdf-viewer-container");
-  if (container.requestFullscreen) {
-    container.requestFullscreen();
-  } else if (container.webkitRequestFullscreen) {
-    container.webkitRequestFullscreen();
-  } else if (container.msRequestFullscreen) {
-    container.msRequestFullscreen();
+  const canvas = document.getElementById("pdf-canvas");
+
+  if (canvas.requestFullscreen) {
+    canvas.requestFullscreen();
+  } else if (canvas.webkitRequestFullscreen) { // Safari
+    canvas.webkitRequestFullscreen();
+  } else if (canvas.msRequestFullscreen) { // IE/Edge
+    canvas.msRequestFullscreen();
   }
 });
+
 
 // -----------------------------
 // Swipe navigation for mobile
@@ -132,3 +134,4 @@ canvas.addEventListener("touchend", (e) => {
     }
   }
 });
+
