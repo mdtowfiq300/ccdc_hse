@@ -1,0 +1,183 @@
+/* General Body Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9f9f6;
+  margin: 0;
+  padding: 0;
+  color: #2c3e50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header */
+header {
+  text-align: center;
+  padding: 0.8rem 1rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  width: 100%;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.tagline {
+  margin-top: 0.5rem;
+  color: #888;
+  font-size: 1rem;
+}
+
+/* Main Content */
+.course-content {
+  padding: 1.5rem 1rem;
+  max-width: 900px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* PDF Viewer */
+#pdf-viewer-container {
+  margin-bottom: 1.5rem;
+}
+
+#loading-indicator {
+  font-size: 1.1rem;
+  color: #555;
+  padding: 3rem 0;
+}
+
+#pdf-canvas {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: auto;
+}
+
+/* PDF Navigation */
+#pdf-nav {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  visibility: hidden;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  padding: 0.6rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.nav-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#fullscreen-btn {
+  display: none; /* Hidden by default */
+  margin-top: 1rem;
+}
+
+#page-num-display {
+  font-size: 1rem;
+  font-weight: 600;
+  min-width: 90px;
+}
+
+/* Course Description */
+.course-description {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.8rem 1.3rem;
+  background-color: #f57c00;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.btn:hover {
+  background-color: #ef6c00;
+  transform: translateY(-2px);
+}
+
+/* ------------------------- */
+/* RESPONSIVE DESIGN */
+/* ------------------------- */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 1.6rem;
+  }
+
+  .tagline {
+    font-size: 0.9rem;
+  }
+
+  #pdf-viewer-container {
+    max-width: 100%;
+  }
+
+  #pdf-canvas {
+    width: 100%;
+  }
+
+  #fullscreen-btn {
+    display: inline-block; /* Show only on mobile */
+  }
+
+  .course-description .desktop-only {
+    display: none; /* Hide long instruction text on mobile */
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.3rem;
+  }
+
+  .tagline {
+    font-size: 0.8rem;
+  }
+
+  .nav-btn {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
+
+  #page-num-display {
+    font-size: 0.8rem;
+    min-width: 70px;
+  }
+}
