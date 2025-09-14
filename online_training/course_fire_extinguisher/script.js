@@ -1,21 +1,16 @@
-// PDF file location
 const url = 'Fire Extinguisher Bangla.pdf';
 
-// Set worker location for PDF.js
+// PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
 
-// State
 let pdfDoc = null;
 let pageNum = 1;
 let pageRendering = false;
 let pageNumPending = null;
+let scale = 1.3;
 
-// Adjust scale depending on screen size
-const isMobile = window.innerWidth <= 768;
-const scale = isMobile ? 1.6 : 1.2;
-
-// DOM
+// DOM elements
 const canvas = document.getElementById('pdf-canvas');
 const ctx = canvas.getContext('2d');
 const prevButton = document.getElementById('prev-page');
@@ -23,14 +18,19 @@ const nextButton = document.getElementById('next-page');
 const pageNumDisplay = document.getElementById('page-num-display');
 const loadingIndicator = document.getElementById('loading-indicator');
 const navControls = document.getElementById('pdf-nav');
-const fullscreenBtn = document.getElementById('fullscreen-btn');
 
-// Render page
+// Adjust scale for mobile
+if (window.innerWidth < 768) {
+  scale = 1.8; // bigger on mobile
+}
+
+// Render a page
 const renderPage = (num) => {
   pageRendering = true;
   pdfDoc.getPage(num).then((page) => {
     const viewport = page.getViewport({ scale: scale });
     const devicePixelRatio = window.devicePixelRatio || 1;
+
     canvas.height = viewport.height * devicePixelRatio;
     canvas.width = viewport.width * devicePixelRatio;
 
@@ -62,13 +62,13 @@ const queueRenderPage = (num) => {
   }
 };
 
-// Update nav
+// Update navigation buttons
 const updateNavButtons = () => {
   prevButton.disabled = pageNum <= 1;
   nextButton.disabled = pageNum >= pdfDoc.numPages;
 };
 
-// Events
+// Event listeners
 prevButton.addEventListener('click', () => {
   if (pageNum > 1) {
     pageNum--;
@@ -83,15 +83,6 @@ nextButton.addEventListener('click', () => {
   }
 });
 
-// Fullscreen (mobile only)
-fullscreenBtn.addEventListener('click', () => {
-  if (canvas.requestFullscreen) {
-    canvas.requestFullscreen();
-  } else if (canvas.webkitRequestFullscreen) {
-    canvas.webkitRequestFullscreen();
-  }
-});
-
 // Load PDF
 pdfjsLib.getDocument(url).promise
   .then((pdfDoc_) => {
@@ -101,7 +92,7 @@ pdfjsLib.getDocument(url).promise
     renderPage(pageNum);
   })
   .catch((err) => {
-    loadingIndicator.textContent =
-      '❌ Error: Could not load the PDF. Please check the file path.';
+    loadingIndicator.innerHTML =
+      '<p style="color:red;">❌ Error: Could not load PDF. Check file path.</p>';
     console.error('Error loading PDF:', err);
   });
