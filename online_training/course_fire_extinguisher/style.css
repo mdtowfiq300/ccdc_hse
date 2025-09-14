@@ -33,7 +33,7 @@ header h1 {
 /* Main Content */
 .course-content {
   padding: 1.5rem 1rem;
-  max-width: 900px;
+  max-width: 1000px;
   width: 100%;
   box-sizing: border-box;
   text-align: center;
@@ -42,12 +42,32 @@ header h1 {
 /* PDF Viewer */
 #pdf-viewer-container {
   margin-bottom: 1.5rem;
+  width: 100%;
 }
 
 #loading-indicator {
   font-size: 1.1rem;
   color: #555;
   padding: 3rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.spinner {
+  border: 4px solid #eee;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 #pdf-canvas {
@@ -58,7 +78,7 @@ header h1 {
   height: auto;
 }
 
-/* PDF Navigation */
+/* Navigation */
 #pdf-nav {
   margin-top: 1rem;
   display: flex;
@@ -92,18 +112,13 @@ header h1 {
   cursor: not-allowed;
 }
 
-#fullscreen-btn {
-  display: none; /* Hidden by default */
-  margin-top: 1rem;
-}
-
 #page-num-display {
   font-size: 1rem;
   font-weight: 600;
   min-width: 90px;
 }
 
-/* Course Description */
+/* Quiz Button */
 .course-description {
   font-size: 0.95rem;
   color: #444;
@@ -128,9 +143,7 @@ header h1 {
   transform: translateY(-2px);
 }
 
-/* ------------------------- */
-/* RESPONSIVE DESIGN */
-/* ------------------------- */
+/* Responsive */
 @media (max-width: 768px) {
   header h1 {
     font-size: 1.6rem;
@@ -140,20 +153,18 @@ header h1 {
     font-size: 0.9rem;
   }
 
-  #pdf-viewer-container {
-    max-width: 100%;
+  .nav-btn {
+    flex: 1;
+    min-width: 100px;
   }
 
-  #pdf-canvas {
-    width: 100%;
+  #page-num-display {
+    font-size: 0.9rem;
   }
 
-  #fullscreen-btn {
-    display: inline-block; /* Show only on mobile */
-  }
-
-  .course-description .desktop-only {
-    display: none; /* Hide long instruction text on mobile */
+  /* Remove description text for mobile */
+  .course-description p {
+    display: none;
   }
 
   .btn {
