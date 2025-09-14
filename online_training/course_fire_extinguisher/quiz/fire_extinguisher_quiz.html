@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ফায়ার এক্সটিংগুইশার কুইজ</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header>
+    <h1>🧯 ফায়ার এক্সটিংগুইশার কুইজ</h1>
+    <p class="tagline">ফায়ার এক্সটিংগুইশারের ব্যবহার এবং সুরক্ষা সম্পর্কিত আপনার জ্ঞান যাচাই করুন</p>
+  </header>
+
+  <main class="course-content">
+    <section class="quiz-section">
+
+      <!-- User Info Fields -->
+      <div class="user-info">
+        <label for="name">আপনার নাম:</label>
+        <input type="text" id="name" placeholder="আপনার নাম লিখুন" required>
+
+        <label for="department">বিভাগ:</label>
+        <input type="text" id="department" placeholder="আপনার বিভাগ লিখুন" required>
+      </div>
+
+      <form id="quizForm"></form>
+
+      <button type="button" class="btn" onclick="checkQuiz()">কুইজ জমা দিন</button>
+
+      <p id="quizResult" class="quiz-result"></p>
+    </section>
+  </main>
+
+  <script src="quiz.js"></script>
+</body>
+</html>
