@@ -1,16 +1,14 @@
-// PDF file location
 const url = 'Fire Extinguisher Bangla.pdf';
 
-// Set worker location for PDF.js
+// PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
 
-// State variables
 let pdfDoc = null;
 let pageNum = 1;
 let pageRendering = false;
 let pageNumPending = null;
-const scale = 1.2;
+let scale = 1.3;
 
 // DOM elements
 const canvas = document.getElementById('pdf-canvas');
@@ -21,13 +19,18 @@ const pageNumDisplay = document.getElementById('page-num-display');
 const loadingIndicator = document.getElementById('loading-indicator');
 const navControls = document.getElementById('pdf-nav');
 
-// Render a specific page
+// Adjust scale for mobile
+if (window.innerWidth < 768) {
+  scale = 1.8; // bigger on mobile
+}
+
+// Render a page
 const renderPage = (num) => {
   pageRendering = true;
   pdfDoc.getPage(num).then((page) => {
-    // Responsive scaling based on screen width
     const viewport = page.getViewport({ scale: scale });
     const devicePixelRatio = window.devicePixelRatio || 1;
+
     canvas.height = viewport.height * devicePixelRatio;
     canvas.width = viewport.width * devicePixelRatio;
 
@@ -37,8 +40,7 @@ const renderPage = (num) => {
       transform: [devicePixelRatio, 0, 0, devicePixelRatio, 0, 0],
     };
 
-    const renderTask = page.render(renderContext);
-    renderTask.promise.then(() => {
+    page.render(renderContext).promise.then(() => {
       pageRendering = false;
       if (pageNumPending !== null) {
         renderPage(pageNumPending);
@@ -81,7 +83,7 @@ nextButton.addEventListener('click', () => {
   }
 });
 
-// Load the PDF
+// Load PDF
 pdfjsLib.getDocument(url).promise
   .then((pdfDoc_) => {
     pdfDoc = pdfDoc_;
@@ -90,7 +92,7 @@ pdfjsLib.getDocument(url).promise
     renderPage(pageNum);
   })
   .catch((err) => {
-    loadingIndicator.textContent =
-      'Error: Could not load the PDF document. Please check the file path and CORS settings.';
+    loadingIndicator.innerHTML =
+      '<p style="color:red;">❌ Error: Could not load PDF. Check file path.</p>';
     console.error('Error loading PDF:', err);
   });
