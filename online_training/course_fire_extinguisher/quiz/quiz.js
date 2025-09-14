@@ -82,13 +82,14 @@ function checkQuiz() {
   document.getElementById("quizResult").innerText = `✅ আপনি ${score} টি প্রশ্নের মধ্যে ${quizData.length} এর মধ্যে সঠিক উত্তর দিয়েছেন।`;
 
   // Send data to Google Sheets
-  fetch("https://script.google.com/macros/s/AKfycbxyekjMPf2Os-Hh3e5k6TQvorn7pwRMlwV7zN0rMdZ9wPTTXsW1wbSl2X4BJ3nvZgRzWQ/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbxdNz-r8z8a_ENgjHfGI90SzL6UdxEEAZVzHUIV5rRsP4zzZUsX7EU7eTpQGHhKtySOzw/exec", {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name: name, department: department, score: score })
   });
 }
+
 
 
 
