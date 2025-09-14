@@ -23,7 +23,10 @@
   <main class="course-content">
     <!-- PDF Viewer Section -->
     <div id="pdf-viewer-container">
-      <div id="loading-indicator">Loading Document...</div>
+      <div id="loading-indicator">
+        <div class="spinner"></div>
+        <p>Loading Document...</p>
+      </div>
       <canvas id="pdf-canvas"></canvas>
       <div id="pdf-nav">
         <button id="prev-page" class="nav-btn">Previous</button>
@@ -33,7 +36,6 @@
     </div>
 
     <div class="course-description">
-      <p>Use the "Next" and "Previous" buttons to navigate through the training material. When you are finished, you can test your knowledge.</p>
       <a href="quiz/fire_extinguisher_quiz.html" class="btn">📄 Take a Quiz</a>
     </div>
   </main>
