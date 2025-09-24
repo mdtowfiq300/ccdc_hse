@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Material Safety Data Sheet</title>
+<link rel="stylesheet" href="style.css">
+
+<!-- protection -->
+<script>
+  if (localStorage.getItem("isLoggedIn") !== "true") {
+    // Save the page they are trying to access
+    localStorage.setItem("redirectAfterLogin", window.location.href);
+    // Redirect to login page
+    window.location.href = "../index.html"; // adjust path if in a subfolder
+  }
+</script>
+
+
+<!-- PDF.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+    <a href="https://mdtowfiq300.github.io/ccdc_hse" class="navbar-link">CCDC EHS</a>
+</nav>
+
+<!-- Edu Hub Section -->
+<section id="edu-hub">
+    <h2>Material Safety Data Sheet</h2>
+
+    <!-- Dropdown -->
+    <div class="pdf-container">
+        <label for="pdf-select">Select MSDS:</label>
+        <select id="pdf-select">
+            <option value="MSDS/1-Barite-MSDS-ENTC-4.2">Barite</option>
+            <option value="MSDS/2-MSDS-Bentonite-NANO.docx">Bentonite</option>
+            <option value="MSDS/3-4-MSDS-PAC">Polyanionic Cellulose</option>
+            <option value="MSDS/5- MSDS ---xanthan gum">Xanthan Gum</option>
+            <option value="MSDS/6-PAL FLC - SDS 14-06-2022 Rev 2.03">PAL FLC</option>
+            <option value="MSDS/7-GLO ASPHOTEX 3000 MSDS">GLO ASPHOTEX 3000</option>
+            <option value="MSDS/8-PAL TEMP - SDS 05-09-2023 Rev 2.01">PAL TEMP</option>
+            <option value="MSDS/9-Caustic Soda - SDS 11-08-2021 Rev 2.00">Caustic Soda</option>
+            <option value="MSDS/10-MSDS SHEET GLO SODA ASH">GLO SODA ASH</option>
+            <option value="MSDS/11-MSDS SHEET SODIUM  BICARBONATE">SODIUM  BICARBONATE</option>
+            <option value="MSDS/12-MSDS GLO CITRIC ACID">CITRIC ACID</option>
+            <option value="MSDS/13-PAL LUBE EP - SDS 06-01-2022 Rev 2.00">PAL LUBE EP</option>
+            <option value="MSDS/14-PAL DRIL LO - SDS 24-03-2023 Rev 2.01">PAL DRIL LO</option>
+            <option value="MSDS/15-C1W NOFOAM A MSDS">C1W NOFOAM A MSDS</option>
+            <option value="MSDS/16-C1W GLUT L-25">C1W GLUT L-25</option>
+            <option value="MSDS/17-C1W FILTER CRACK W MSDS">C1W FILTER CRACK W</option>
+            <option value="MSDS/18-PAL LIGNO CF- SDS 04-08-2022 Rev 2.00">PAL LIGNO CF</option>
+            <option value="MSDS/19-MSDS-PAL PAL CAUSLIG">Lignite Powder</option>
+            <option value="MSDS/20-MSDS UMC - ACRYL THIN HT">UMC - ACRYL THIN HT</option>
+            <option value="MSDS/21-MSDS (ANIONIC PAM)-PHPA">PHPA Polyacrylamide</option>
+            <option value="MSDS/22-24-Mica - SDS 15-06-2021 Rev 2.00">Mica</option>
+            <option value="MSDS/25-Lime  - SDS 05-09-2021 Rev 2.00">Lime</option>
+            <option value="MSDS/26-MSDS-Potassium Hydroxide">Potassium Hydroxide</option>
+            <option value="MSDS/27-C1W GLYCOL MC 101_2024_July_10_ARE_EN">C1W GLYCOL MC 101</option>
+            <option value="MSDS/28-MSDS  GLO NA SULFITE">GLO NA SULFITE</option>
+            <option value="MSDS/29-CALCIUM CARBONATE - SDS 13-04-2021 Rev 2.00">CALCIUM CARBONATE</option>
+            <option value="MSDS/30-MSDS SHEET GLO CHOLINE">Quaternary Ammonium Salt</option>
+            <option value="MSDS/31-MSDS GLO CLAY 1000 API  grade">GLO CLAY 1000</option>
+            <option value="MSDS/32-KCL MSDS">Potassium chloride</option>
+            <option value="MSDS/33-C1W FILMCORE AD MSDS">C1W FILMCORE AD</option>
+            <option value="MSDS/34-C1W NOFOAM S MSDS">C1W NOFOAM S</option>
+            <option value="MSDS/35-MSDS   GLO SCAVENGER 1000">GLO SCAVENGER 1000</option>
+             <option value="MSDS/36-CaBr2 MSDS">Calcium Bromide</option>
+            
+
+        </select>
+    </div>
+
+    <!-- Fullscreen Button -->
+    <button id="fullscreen-btn">⛶ Fullscreen</button>
+
+    <!-- Viewer -->
+    <div id="viewer-container"></div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
