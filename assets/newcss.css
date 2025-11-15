@@ -338,13 +338,14 @@ img {
   padding: 90px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  max-width: 80%;
+  max-width: 70%;
   text-align: center;
   margin: 0 auto; /* Center the container horizontally */
+  
 }
 
 .image-container img {
-  width: 70%;   /* image takes half of the container */
+  width: 90%;   /* image takes half of the container */
   height: auto; /* keep aspect ratio */
   border-radius: 6px;
 }
@@ -371,7 +372,7 @@ img {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow effect */
   max-width: 1150px; /* Max width for the container */
   width: 100%; /* Ensure the container takes full available width */
-  margin-bottom: -5%;
+  
 }
 .home__container {
   gap: 1rem;
