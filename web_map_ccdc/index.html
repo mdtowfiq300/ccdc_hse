@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCDC Bangladesh - Rig Logistics & Safety Map</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="sidebar">
+        <div class="logo-area">
+            <h2>CCDC Well Site</h2>
+            
+        </div>
+
+        <div class="card">
+            <h3>📍 Route Planner</h3>
+            
+            <div class="form-group">
+                <label for="start-location">STARTING POINT (FROM):</label>
+                <select id="start-location" class="map-select">
+                    <option value="">Loading locations...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="end-location">DESTINATION (TO):</label>
+                <select id="end-location" class="map-select">
+                    <option value="">Loading locations...</option>
+                </select>
+            </div>
+
+            <button id="btn-find-route" class="btn-route">Find Route</button>
+
+            <div id="routing-results">
+                <span class="placeholder">Select locations and click Find Route.</span>
+            </div>
+        </div>
+
+
+        
+        <div class="footer">
+            <p>HSE & Logistics Digital Tool</p>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
