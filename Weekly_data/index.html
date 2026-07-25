@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rig Weekly HSE Reports Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background: #ffffff;
+      padding: 32px 40px;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      max-width: 500px;
+      width: 100%;
+    }
+    .card-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    h2 {
+      color: #1e293b;
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+    p {
+      color: #64748b;
+      font-size: 14px;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      background-color: #fff;
+      color: #0f172a;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .info-badge {
+      display: none;
+      margin-top: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #2563eb;
+      background-color: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+    .btn {
+      width: 100%;
+      background-color: #2563eb;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.2s;
+    }
+    .btn:hover {
+      background-color: #1d4ed8;
+    }
+    .status-msg {
+      margin-top: 15px;
+      font-size: 13px;
+      text-align: center;
+      color: #dc2626;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>HSE Summary Reports</h2>
+      <p>Select a Rig and Month to access the Google Sheet</p>
+    </div>
+
+    <!-- Rig Selection -->
+    <div class="form-group">
+      <label for="rigSelect">Select Rig</label>
+      <select id="rigSelect" onchange="updateAvailabilityInfo()">
+        <option value="" disabled selected>-- Choose Rig --</option>
+        <option value="10X">Rig 10X</option>
+        <option value="Kamta_2">Kamta 2</option>
+        <option value="Titas_28">Titas 28</option>
+        <option value="Titas_29">Titas 29</option>
+        <option value="Titas_31">Titas 31</option>
+      </select>
+      <!-- Dynamic Info Badge -->
+      <div id="availabilityInfo" class="info-badge"></div>
+    </div>
+
+    <!-- Month Selection (Jan - Aug) -->
+    <div class="form-group">
+      <label for="monthSelect">Select Month</label>
+      <select id="monthSelect">
+        <option value="" disabled selected>-- Choose Month --</option>
+        <option value="JAN">January</option>
+        <option value="FEB">February</option>
+        <option value="MAR">March</option>
+        <option value="APR">April</option>
+        <option value="MAY">May</option>
+        <option value="JUN">June</option>
+        <option value="JUL">July</option>
+        <option value="AUG">August</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="openReport()">Open Summary Sheet</button>
+    <div id="statusMsg" class="status-msg"></div>
+  </div>
+
+  <script>
+    // Starting availability descriptions for each rig
+    const availabilityStart = {
+      "10X": "January",
+      "Kamta_2": "May",
+      "Titas_28": "January",
+      "Titas_29": "July",
+      "Titas_31": "April"
+    };
+
+    // Database mapping Rigs and Months to exact Google Sheet Summary URLs
+    const reportDatabase = {
+      "10X": {
+        "JAN": "https://docs.google.com/spreadsheets/d/11yOiyz0ssG1CJ7_NyIMOM1tyIYfRqT3X/edit?gid=984753404#gid=984753404",
+        "FEB": "https://docs.google.com/spreadsheets/d/1j7czsNtuzbVULWs0qJDkXB5xHdPJdqSs/edit?gid=1974412238#gid=1974412238",
+        "MAR": null, // Not found
+        "APR": "https://docs.google.com/spreadsheets/d/19X62XYmxvauV6ziuv19D_256r1-oxpeN/edit?gid=1503209616#gid=1503209616",
+        "MAY": "https://docs.google.com/spreadsheets/d/1Ua4qcMPpjP9GOMYnomG555iJu52P3o45/edit?gid=1940723359#gid=1940723359",
+        "JUN": "https://docs.google.com/spreadsheets/d/1rDx5AAoQ5Hry4qcaCL91l9ZCNfCMsxcp/edit?gid=1840334609#gid=1840334609",
+        "JUL": "https://docs.google.com/spreadsheets/d/1g_R6hqNIjtLJvL65D8PETzK2irro7agd/edit?gid=679884190#gid=679884190",
+        "AUG": ""
+      },
+      "Kamta_2": {
+        "JAN": "", "FEB": "", "MAR": "", "APR": "",
+        "MAY": "https://docs.google.com/spreadsheets/d/1JRwYLkb4RehAITb8ML-pFL6pbFpB88H0/edit?gid=1047761047#gid=1047761047",
+        "JUN": "https://docs.google.com/spreadsheets/d/1j2P6MAT6d23mwayD3wdFkhFfD0CBcXd_/edit?gid=812242169#gid=812242169",
+        "JUL": "https://docs.google.com/spreadsheets/d/1cH0PXcLB071E6rWnvDApSV5FvW8ebOus/edit?gid=1700705597#gid=1700705597",
+        "AUG": ""
+      },
+      "Titas_28": {
+        "JAN": "https://docs.google.com/spreadsheets/d/19-BdlowIi1GgXZ3WOuOStSMJpqRWCvKn/edit?gid=56282218#gid=56282218",
+        "FEB": "https://docs.google.com/spreadsheets/d/1_pDf7jnUExMFsS4LWXDCLfpkzpkU2yT3/edit?gid=1992925375#gid=1992925375",
+        "MAR": null, // Not available
+        "APR": "https://docs.google.com/spreadsheets/d/1Hln0e-rWtAY03YUFCx1KP9dyyWeoEfuA/edit?gid=221279603#gid=221279603",
+        "MAY": "https://docs.google.com/spreadsheets/d/1ZzSBrvWzvEhNVysSnKo8ugZrtaV4S_m7/edit?gid=549166949#gid=549166949",
+        "JUN": "https://docs.google.com/spreadsheets/d/14q2rSHGpurZis-JqdcrNIxDU43W6Esig/edit?gid=255740823#gid=255740823",
+        "JUL": "", "AUG": ""
+      },
+      "Titas_29": {
+        "JAN": "", "FEB": "", "MAR": "", "APR": "", "MAY": "", "JUN": "",
+        "JUL": "https://docs.google.com/spreadsheets/d/13jiItdrwvZR0Mm9A8tKMWNtskFKCeOX0/edit?gid=1507020700#gid=1507020700",
+        "AUG": ""
+      },
+      "Titas_31": {
+        "JAN": "", "FEB": "", "MAR": "",
+        "APR": "https://docs.google.com/spreadsheets/d/1B5tTiAYX9tZfSwFCc9Gi0hF4SUzuCJAb/edit?gid=138251933#gid=138251933",
+        "MAY": "https://docs.google.com/spreadsheets/d/1KhzY13OPlLbqRfdHZGYSBKK8cUpi2CIZ/edit?gid=1912548472#gid=1912548472",
+        "JUN": "https://docs.google.com/spreadsheets/d/1OMgb4gekshvY55vMmATjISR2aRktmyCL/edit?gid=1047545097#gid=1047545097",
+        "JUL": "https://docs.google.com/spreadsheets/d/19ojfS3XYmFGQ4-tP5yiNYBgsg4oA_WHa/edit?gid=1429580668#gid=1429580668",
+        "AUG": ""
+      }
+    };
+
+    function updateAvailabilityInfo() {
+      const rig = document.getElementById("rigSelect").value;
+      const infoBox = document.getElementById("availabilityInfo");
+      
+      if (rig && availabilityStart[rig]) {
+        infoBox.innerText = `Data is available from ${availabilityStart[rig]}`;
+        infoBox.style.display = "block";
+      } else {
+        infoBox.style.display = "none";
+      }
+    }
+
+    function openReport() {
+      const rig = document.getElementById("rigSelect").value;
+      const month = document.getElementById("monthSelect").value;
+      const statusMsg = document.getElementById("statusMsg");
+
+      statusMsg.style.display = "none";
+
+      if (!rig || !month) {
+        statusMsg.innerText = "Please select both a Rig and a Month.";
+        statusMsg.style.display = "block";
+        return;
+      }
+
+      const url = reportDatabase[rig]?.[month];
+
+      if (url === null) {
+        statusMsg.innerText = `Report for ${rig} (${month}) is Not Available.`;
+        statusMsg.style.display = "block";
+      } else if (url && url.trim() !== "") {
+        window.open(url, '_blank');
+      } else {
+        statusMsg.innerText = `Link for ${rig} - ${month} has not been added yet.`;
+        statusMsg.style.display = "block";
+      }
+    }
+  </script>
+
+</body>
+</html>
